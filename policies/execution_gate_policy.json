@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "tca_id": "TCA0",
+  "agents": {
+    "agent_clerk": {
+      "tree": ["AND", ["dept.office", ["OR", ["class.public", "class.internal"]]]],
+      "tags": ["t.office", "t.readonly"]
+    },
+    "agent_admin": {
+      "tree": ["OR", ["dept.office", "dept.ops"]],
+      "tags": ["t.office", "t.admin", "t.shell"]
+    },
+    "agent_guest": {
+      "tree": ["role.guest"],
+      "tags": ["t.guest"]
+    }
+  },
+  "tools": {
+    "read_file": {"kind": "file", "approval": false},
+    "write_file": {"kind": "file", "approval": true},
+    "delete_file": {"kind": "file", "approval": true},
+    "run_command": {"kind": "cmd", "approval": false},
+    "browse_url": {"kind": "browser", "approval": false},
+    "call_api": {"kind": "api", "approval": false}
+  },
+  "file": {
+        "allowed_prefixes": ["/office/notices", "/office/internal", "/office/drafts", "/ops/runbooks", "/kb", "/office/knowledge"],
+        "denied_prefixes": ["/etc", "/root", "/windows/system32"],
+        "class_by_prefix": {
+            "/office/notices": ["dept.office", "class.public", "file.read"],
+            "/office/internal": ["dept.office", "class.internal", "file.read"],
+            "/office/secret": ["dept.office", "class.secret", "file.read"],
+            "/office/drafts": ["dept.office", "class.internal", "file.write", "file.delete"],
+            "/ops/runbooks": ["dept.ops", "class.internal", "file.read"],
+            "/kb": ["dept.office", "class.public", "file.read"],
+            "/office/knowledge": ["dept.office", "class.public", "file.read"]
+        }
+  },
+  "cmd": {
+    "allowed_binaries": ["systemctl", "journalctl", "hostname", "whoami"],
+    "denied_binaries": ["rm", "bash", "sh", "powershell", "curl", "wget", "nc", "python"]
+  },
+  "browser": {
+    "allowed_domains": ["gov.cn", "zwfw.gov.cn", "office.gov.local"],
+    "denied_domains": ["drop-zone.test", "exfil.test", "evil.example"]
+  },
+  "api": {
+    "allowed_hosts": ["api.office.gov.local", "open.zwfw.gov.cn"],
+    "denied_hosts": ["exfil.test", "drop-zone.test", "evil.example"]
+  },
+  "chain_puncture": {
+    "from_kinds": ["file"],
+    "to_kinds": ["cmd", "browser", "api"],
+    "require_class": ["class.internal", "class.secret"],
+    "delta_rp": {"gate": "OR", "tags": ["t.readonly", "t.guest"]}
+  }
+}

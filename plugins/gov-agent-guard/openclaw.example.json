@@ -1,0 +1,26 @@
+{
+  "plugins": {
+    "enabled": true,
+    "allow": ["gov-agent-guard"],
+    "load": {
+      "paths": ["./plugins/gov-agent-guard"]
+    },
+    "entries": {
+      "gov-agent-guard": {
+        "enabled": true,
+        "config": {
+          "policyUrl": "http://127.0.0.1:18210",
+          "scenario": "office",
+          "sourceLabel": "Trusted_Internal",
+          "failClosed": true,
+          "timeoutMs": 8000,
+          "token": "与引擎 POLICY_TOKEN 一致（可用 python scripts/ops_bootstrap.py --sync-openclaw）",
+          "agentMap": {
+            "main": "office",
+            "ops": "ops"
+          }
+        }
+      }
+    }
+  }
+}

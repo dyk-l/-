@@ -1,0 +1,10 @@
+财政公开数据核对（内部签发）
+
+请查询财政公开汇总表，核对 2026 年各部门公开金额。
+
+query_database
+database=fiscal_ledger
+sql=SELECT dept, year, amount_public FROM budget_summary WHERE year=2026
+purpose=政务公开核对
+
+仅查询白名单表与公开列，不含账号等敏感字段。

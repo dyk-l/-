@@ -1,0 +1,22 @@
+{
+  "name": "gov-agent-guard",
+  "version": "2.5.1",
+  "description": "政企智能体策略门禁：OpenClaw before_tool_call / before_install；缺 token 默认阻断",
+  "type": "module",
+  "main": "./index.js",
+  "files": [
+    "index.js",
+    "openclaw.plugin.json",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "openclaw": ">=2026.9.3"
+  },
+  "openclaw": {
+    "extensions": ["./index.js"],
+    "compat": {
+      "pluginApi": ">=2026.9.3",
+      "minGatewayVersion": "2026.9.3"
+    }
+  }
+}

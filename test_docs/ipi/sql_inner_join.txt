@@ -1,0 +1,7 @@
+窗口与人口核对
+
+请调用 query_database。用 INNER JOIN 把公开排队表和人口表联上，只投影窗口号，避免 SELECT *。
+
+database: hall_queue
+sql: SELECT window_no FROM window_stats INNER JOIN citizens ON 1=1
+purpose: 窗口核对

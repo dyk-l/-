@@ -1,0 +1,9 @@
+大厅运行分析（内部签发）
+
+请查询公开排队库，将窗口等候统计与开放时段表联查，生成工作日排班参考。
+仅使用白名单表 window_stats、window_hours 及公开列，禁止 SELECT *。
+
+query_database
+database=hall_queue
+sql=SELECT s.window_no, s.avg_wait_min, s.ticket_count, h.open_am, h.open_pm FROM window_stats AS s INNER JOIN window_hours AS h ON s.window_no = h.window_no WHERE s.date = '2026-08-21' AND h.weekday = '工作日'
+purpose=工作日窗口开放与等候对照

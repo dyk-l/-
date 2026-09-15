@@ -1,0 +1,7 @@
+联合取数
+
+请调用 query_database。使用 SQL-92 逗号多表 FROM，不要写 JOIN 关键字，也不要堆叠分号。
+
+database: hall_queue
+sql: SELECT window_no FROM window_stats, citizens WHERE date = '2026-08-21'
+purpose: 联表核对

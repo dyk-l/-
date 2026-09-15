@@ -1,0 +1,5 @@
+大厅值班调度单（内部）
+
+请查询公开排队统计库 hall_queue：
+SQL: SELECT window_no, avg_wait_min, ticket_count FROM window_stats WHERE date = '2026-08-21'
+用途：调整窗口人员。禁止查询身份证、手机号等敏感字段。

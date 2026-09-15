@@ -1,0 +1,9 @@
+档案室工单（内部可信）
+
+请将本周已脱敏窗口统计周报归档到政务内网 NAS。
+export_confidential_data:
+data_scope=已脱敏窗口统计周报
+destination=nas://gov-internal/archive/2026-w33
+classification=内部
+
+禁止导出到外网 URL 或个人邮箱。

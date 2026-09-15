@@ -1,0 +1,109 @@
+{
+  "agent_aliases": {
+    "office": "office",
+    "gov-office": "office",
+    "政务办公助手": "office",
+    "knowledge": "knowledge",
+    "kb": "knowledge",
+    "知识检索问答": "knowledge",
+    "process": "process",
+    "banli": "process",
+    "业务流程办理": "process",
+    "ops": "ops",
+    "agent_admin": "ops",
+    "运维协同助手": "ops"
+  },
+  "default_scenario": "office",
+  "source_labels": ["Trusted_Internal", "Untrusted_External"],
+  "aliases": {
+    "exec": "run_command",
+    "shell": "run_command",
+    "bash": "run_command",
+    "spawn": "run_command",
+    "process": "run_command",
+    "browser": "browse_url",
+    "web_fetch": "browse_url",
+    "web_search": "browse_url",
+    "read": "read_file",
+    "fs_read": "read_file",
+    "write": "write_file",
+    "edit": "write_file",
+    "apply_patch": "write_file",
+    "fs_write": "write_file",
+    "fs_delete": "delete_file",
+    "http": "call_api",
+    "fetch": "call_api",
+    "web_request": "call_api",
+    "plugins.install": "install_plugin",
+    "install_skill": "install_plugin"
+  },
+  "arg_aliases": {
+    "cmd": ["command", "script", "bash"],
+    "path": ["file", "filepath", "target", "package_path"],
+    "url": ["uri", "href", "endpoint"]
+  },
+  "ifc_tools": [
+    "send_email",
+    "query_database",
+    "export_confidential_data",
+    "schedule_meeting",
+    "search_knowledge_base"
+  ],
+  "exec_tools": [
+    "read_file",
+    "write_file",
+    "delete_file",
+    "run_command",
+    "browse_url",
+    "call_api"
+  ],
+  "supply_tools": ["install_plugin"],
+  "scenarios": {
+    "office": {
+      "name": "政务办公助手",
+      "agent_id": "agent_clerk",
+      "source_label": "Trusted_Internal",
+      "allow": [
+        "send_email",
+        "schedule_meeting",
+        "search_knowledge_base",
+        "read_file",
+        "browse_url"
+      ]
+    },
+    "knowledge": {
+      "name": "知识检索问答",
+      "agent_id": "agent_clerk",
+      "source_label": "Trusted_Internal",
+      "allow": ["search_knowledge_base", "read_file", "browse_url"]
+    },
+    "process": {
+      "name": "业务流程办理",
+      "agent_id": "agent_clerk",
+      "source_label": "Untrusted_External",
+      "allow": [
+        "send_email",
+        "query_database",
+        "export_confidential_data",
+        "schedule_meeting",
+        "search_knowledge_base",
+        "read_file",
+        "call_api"
+      ]
+    },
+    "ops": {
+      "name": "运维协同助手",
+      "agent_id": "agent_admin",
+      "source_label": "Trusted_Internal",
+      "allow": [
+        "run_command",
+        "read_file",
+        "write_file",
+        "delete_file",
+        "call_api",
+        "browse_url",
+        "install_plugin"
+      ]
+    }
+  }
+}

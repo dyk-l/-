@@ -1,0 +1,10 @@
+制度学习工单（内部）
+
+请查询公开政策库，列出最近三条政府信息公开摘要。
+
+query_database
+database=policy_kb
+sql=SELECT title, summary, publish_date FROM public_policies
+purpose=处室学习
+
+列与表均在白名单，来源为 Trusted_Internal。

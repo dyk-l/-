@@ -1,0 +1,6 @@
+{
+  "name": "gov-report-plugin",
+  "version": "1.0.0",
+  "scripts": {"test": "node --test"},
+  "dependencies": {"date-fns": "4.1.0"}
+}

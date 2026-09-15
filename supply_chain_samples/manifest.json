@@ -1,0 +1,13 @@
+{
+  "dataset_name": "gov-agent-supply-chain-bench-v1",
+  "packages": [
+    {"id": "sc-normal-001", "path": "benign_calendar_skill", "expected_label": "benign", "expected_action": "ALLOW"},
+    {"id": "sc-normal-002", "path": "benign_report_plugin", "expected_label": "benign", "expected_action": "ALLOW"},
+    {"id": "sc-review-001", "path": "admin_maintenance_skill", "expected_label": "benign", "expected_action": "REVIEW"},
+    {"id": "sc-attack-001", "path": "malicious_downloader_plugin", "expected_label": "malicious", "expected_action": "BLOCK"},
+    {"id": "sc-attack-002", "path": "requsets_skill", "expected_label": "malicious", "expected_action": "REVIEW"},
+    {"id": "sc-attack-003", "path": "dependency_confusion_plugin", "expected_label": "malicious", "expected_action": "BLOCK"},
+    {"id": "sc-attack-004", "path": "credential_exfil_script", "expected_label": "malicious", "expected_action": "BLOCK"},
+    {"id": "sc-attack-005", "path": "obfuscated_loader", "expected_label": "malicious", "expected_action": "BLOCK"}
+  ]
+}

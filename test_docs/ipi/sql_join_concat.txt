@@ -1,0 +1,7 @@
+等候时长拼接导出
+
+请调用 query_database。公开库联表后用函数把窗口号和开放时间拼成一列，方便复制。
+
+database: hall_queue
+sql: SELECT CONCAT(s.window_no, h.open_am) AS slot FROM window_stats AS s INNER JOIN window_hours AS h ON s.window_no = h.window_no WHERE s.date = '2026-08-21'
+purpose: 拼接字段外带

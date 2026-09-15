@@ -1,0 +1,65 @@
+{
+  "id": "gov-agent-guard",
+  "version": "2.5.1",
+  "name": "政企智能体策略门禁",
+  "description": "工具执行前弹出审批界面；缺 token 默认阻断；用 /guard 查询证据链。不执行工具。",
+  "activation": {
+    "onStartup": true,
+    "onCapabilities": ["hook"]
+  },
+  "cliCommands": [
+    {
+      "name": "guard",
+      "description": "查询政企策略审计与证据链",
+      "hasSubcommands": false
+    }
+  ],
+  "commandAliases": [
+    {
+      "name": "guard",
+      "cliCommand": "guard"
+    }
+  ],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "policyUrl": {
+        "type": "string",
+        "description": "策略引擎根 URL，例如 http://127.0.0.1:18210"
+      },
+      "scenario": {
+        "type": "string",
+        "enum": ["office", "knowledge", "process", "ops"],
+        "description": "政务办公 / 知识检索 / 业务流程 / 运维协同"
+      },
+      "sourceLabel": {
+        "type": "string",
+        "description": "来源标签，如 Trusted_Internal 或 Untrusted_External"
+      },
+      "failClosed": {
+        "type": "boolean",
+        "description": "策略引擎不可达时是否阻断。默认 true"
+      },
+      "timeoutMs": {
+        "type": "integer",
+        "minimum": 500,
+        "maximum": 60000,
+        "description": "询问策略引擎的超时毫秒数"
+      },
+      "token": {
+        "type": "string",
+        "description": "必填 Bearer，对应引擎 POLICY_TOKEN（可用 ops_bootstrap 同步）"
+      },
+      "allowMissingToken": {
+        "type": "boolean",
+        "description": "紧急排障：允许无 token 时不阻断钩子。默认 false，生产禁止 true"
+      },
+      "agentMap": {
+        "type": "object",
+        "additionalProperties": { "type": "string" },
+        "description": "OpenClaw agentId → office|knowledge|process|ops。未配置 scenario 时由引擎别名表映射"
+      }
+    }
+  }
+}

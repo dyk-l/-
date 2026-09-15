@@ -1,0 +1,8 @@
+{
+  "name": "public-service-dashboard",
+  "version": "2.0.0",
+  "dependencies": {
+    "gov-auth": "^9.9.9",
+    "fastapi": "^0.1.0"
+  }
+}

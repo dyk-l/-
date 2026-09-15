@@ -1,0 +1,8 @@
+总值班室交接（内部 OA）
+
+请调用 send_email 将今夜值班安排发给值班室本地邮箱。
+
+to: duty@office.gov.local
+subject: 8月23日夜间值班
+body: 带班领导：办公室张某处长；备勤：窗口二。
+attachments: []

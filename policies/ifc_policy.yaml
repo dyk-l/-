@@ -1,0 +1,181 @@
+# 策略与参数白名单（落地网关）
+# 判定只看：数据来源标签 + 工具参数是否命中白名单/黑名单。
+# 禁止按文件名、目录名（如 test_docs）一刀切。
+#
+# 论文落地（按机制，不按单条样本补洞）：
+# - ACE (Li et al., NDSS 2026): 格点信息流；具体计划只能使用已注册 schema 字段，
+#   未知参数视为额外能力，不可信来源禁止。
+# - AgentFuzz / 污点漏洞 (Liu et al., USENIX Security 2025): 高危 sink
+#   （send_email / query_database / export）执行前必须做 sanitizer。
+#   SQL 表/列一律由 sqlglot AST 提取，禁止正则抽表抽列。
+#   不可信发信：NFKC/全角归一化后做宽泛数字串与熵检测。
+#   正文/主题中的非白名单邮箱视为隐秘通讯管道（email.cover_channel）。
+#   会话级污点：读过低信任/高密级数据后标记 Tainted，清除前禁止外发邮件。
+#   HITL：不可信来源升级高危或仅命中疑虑规则时返回 PENDING_APPROVAL。
+# - Prompt injection 形式化 (Liu et al., USENIX Security 2024): 不可信正文是 data
+#   不是 instruction；控制面字段不得从 data 通道夹带。
+
+version: 2
+high_risk_tools:
+  - send_email
+  - query_database
+  - export_confidential_data
+
+low_risk_tools:
+  - schedule_meeting
+  - search_knowledge_base
+
+source_labels:
+  Trusted_Internal:
+    trust_rank: 80
+    description: 内部工单 / OA / 可信业务系统
+  Untrusted_External:
+    trust_rank: 20
+    description: 外部来文、互联网投递、公民上传件
+
+session_taint:
+  enabled: true
+  # 会话读过低信任查询或高密级目录后打上 Tainted；clear 之前禁止 send_email
+  high_classification_min_trust: 80
+  taint_on_untrusted_query: true
+  taint_on_sensitive_columns: true
+  block_email_while_tainted: true
+
+hitl:
+  enabled: true
+  # rank<50 触发高危工具：即使参数过白名单也不自动执行，进入 PENDING_APPROVAL
+  untrusted_high_risk_pending: true
+  # 仅命中下列疑虑规则（无硬拦截）时也走人工审批，而非 BLOCKED
+  doubt_rule_ids:
+    - session.tainted
+
+email:
+  allowed_domains:
+    - gov.cn
+    - office.gov.local
+    - zwfw.gov.cn
+  denied_domains:
+    - exfil.test
+    - darkmail.test
+    - drop-zone.test
+    - evil.example
+  extra_recipient_fields:
+    - cc
+    - bcc
+  content_fields:
+    - subject
+    - body
+    - attachments
+  block_nonwhitelist_in_content: true
+  schema_fields:
+    - to
+    - cc
+    - bcc
+    - subject
+    - body
+    - attachments
+  untrusted_forbid_attachments: true
+  untrusted_digit_run_min: 11
+  untrusted_entropy_min_len: 20
+  untrusted_entropy_bits: 3.8
+  untrusted_body_denylist:
+    - 身份证
+    - 手机号
+    - 通讯录
+    - 口令
+    - 住址
+    - 银行卡
+    - id_card
+    - password
+    - 哈希
+    - 证件号码
+    - 联系电话
+    - 户籍
+  untrusted_pii_patterns:
+    - name: id_card
+      regex: '\b\d{17}[\dXx]\b'
+    - name: mobile
+      regex: '\b1[3-9]\d{9}\b'
+
+sql:
+  ast_parser: sqlglot
+  strip_comments: true
+  split_statements: true
+  # 不可信来源：SELECT 列表只能是简单列投影（可 AS 别名），禁止函数/算术/拼接
+  untrusted_simple_projection_only: true
+  deny_keywords:
+    - DROP
+    - DELETE
+    - UPDATE
+    - INSERT
+    - ALTER
+    - TRUNCATE
+    - MERGE
+    - GRANT
+    - INTO OUTFILE
+    - UNION
+  forbid_select_star: true
+  sensitive_columns:
+    - id_card
+    - phone
+    - address
+    - account_no
+    - marital_status
+    - score
+    - password
+  catalogs:
+    hall_queue:
+      min_trust_rank: 20
+      allowed_tables:
+        - window_stats
+        - window_hours
+      allowed_columns:
+        - window_no
+        - avg_wait_min
+        - date
+        - ticket_count
+        - open_am
+        - open_pm
+        - weekday
+    policy_kb:
+      min_trust_rank: 20
+      allowed_tables:
+        - public_policies
+      allowed_columns:
+        - title
+        - summary
+        - publish_date
+    citizen_registry:
+      min_trust_rank: 80
+      allowed_tables:
+        - citizens_public
+      allowed_columns:
+        - district
+        - ticket_no
+    fiscal_ledger:
+      min_trust_rank: 80
+      allowed_tables:
+        - budget_summary
+        - dept_catalog
+      allowed_columns:
+        - dept
+        - year
+        - amount_public
+        - dept_name
+        - bureau
+    credit_records:
+      min_trust_rank: 80
+      allowed_tables:
+        - credit_public
+      allowed_columns:
+        - year
+        - grade_band
+
+export:
+  min_trust_rank: 80
+  allowed_destination_prefixes:
+    - "nas://gov-internal/"
+    - "mailto:archive@office.gov.cn"
+  denied_classifications_for_untrusted:
+    - 秘密
+    - 机密

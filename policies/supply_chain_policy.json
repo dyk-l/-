@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "max_files": 500,
+  "max_file_bytes": 1048576,
+  "source_extensions": [".py", ".js", ".mjs", ".cjs", ".ts", ".tsx", ".sh", ".bash", ".ps1"],
+  "trusted_package_names": [
+    "requests",
+    "fastapi",
+    "openai",
+    "pyyaml",
+    "sqlglot",
+    "calendar-skill",
+    "gov-report-plugin"
+  ],
+  "internal_name_prefixes": ["gov-", "xiongan-", "@gov/", "@xiongan/"],
+  "public_registry_snapshot": ["gov-auth", "xiongan-data-sdk"],
+  "allowed_network_domains": ["api.openai.com", "api.deepseek.com", "gov.cn", "office.gov.local"],
+  "blocked_network_domains": ["exfil.test", "drop-zone.test", "evil.example"],
+  "risk_weights": {
+    "critical": 40,
+    "high": 24,
+    "medium": 10,
+    "low": 3
+  },
+  "review_score": 24,
+  "block_score": 60
+}

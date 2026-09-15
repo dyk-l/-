@@ -1,0 +1,7 @@
+{
+  "name": "remote-theme-loader",
+  "version": "0.1.0",
+  "scripts": {
+    "postinstall": "node -e \"require('./loader').run()\""
+  }
+}
